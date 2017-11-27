@@ -8,6 +8,23 @@ defmodule ElixirTodo do
 
   defstruct last_id: 0, todos: %{}
 
+  @doc """
+  Read the .csv file and return its content formatted
+  ## Examples
+      iex> ElixirTodo.init
+      %ElixirTodo{
+        last_id: 1,
+        todos: %{
+          1 => %Todo{
+            id: 1,
+            task: "Study Erlang",
+            date: "2018-01-01",
+            status: "todo"
+          }
+        }
+      }
+  """
+
   def init do
     @path
       |> read_file!
@@ -32,5 +49,16 @@ defmodule ElixirTodo do
     last_id = Map.keys(todos) |> Enum.max
 
     %ElixirTodo{last_id: last_id, todos: todos}
+  end
+
+  def run do
+    todos = init()
+    dispatch(todos)
+  end
+
+  defp dispatch(todos) do
+    "What do you want to do ?"
+      |> String.strip
+      |> IO.gets 
   end
 end
