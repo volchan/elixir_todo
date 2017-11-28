@@ -51,14 +51,53 @@ defmodule ElixirTodo do
     %ElixirTodo{last_id: last_id, todos: todos}
   end
 
-  def run do
-    todos = init()
-    dispatch(todos)
+  defp display_list(todos) do
+    "----- Todo List -----" |> IO.puts
+    todos |> Enum.each(
+      fn (todo) ->
+        todo_struct = elem(todo, 1)
+        "#{todo_struct.id} -> " <>
+          "#{todo_struct.date} - " <>
+          "#{todo_struct.task} - " <>
+          "#{Todo.display_todo_status(todo_struct)}"
+          |> IO.puts
+      end
+    )
+    "---------------------" |> IO.puts
+    display_menu(todos)
+  end
+
+  defp add_task(todos) do
+    id = todos.last_id + 1
+    task = "What if your task ? " |> IO.gets |> String.trim
+    date = "When is your task due ? " |> IO.gets |> String.trim
+    new_todos = Map.put_new(todos.todos, id, %Todo{date: date, id: id, status: "false", task: task})
+    display_list(new_todos)
   end
 
   defp dispatch(todos) do
-    "What do you want to do ?"
-      |> String.strip
-      |> IO.gets 
+    user_choise = "What do you want to do ? " |> IO.gets |> String.trim
+    cond do
+      user_choise == "1" -> display_list(todos.todos)
+      user_choise == "2" -> add_task(todos)
+      # user_choise == "3" -> update_task(todos)
+      # user_choise == "4" -> delete_task(todos)
+      user_choise == "5" -> exit(:shutdown)
+      true -> dispatch(todos)
+    end
+  end
+
+  defp display_menu(todos) do
+    "1 -> Show todo list." |> IO.puts
+    "2 -> Add a new task." |> IO.puts
+    "3 -> Change task status." |> IO.puts
+    "4 -> Delete a task." |> IO.puts
+    "5 -> Exit !" |> IO.puts
+    dispatch(todos)
+  end
+
+  def run do
+    todos = init()
+    display_menu(todos)
   end
 end
