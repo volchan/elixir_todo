@@ -34,14 +34,14 @@ defmodule ElixirTodo do
   defp read_file!(path) do
     path
       |> File.stream!
-      |> Stream.map(&String.replace(&1, "\n", ""))
+      |> CSV.decode
+      |> Enum.take(2)
   end
 
   defp format(input) do
     format_todos = fn (el, acc) ->
-      [id, task, date, status] = String.split(el, ",")
+      [id, task, date, status] = elem(el, 1)
       id = id |> String.to_integer
-
       Map.put(acc, id, %Todo{id: id, task: task, date: date, status: status})
     end
 
@@ -53,7 +53,7 @@ defmodule ElixirTodo do
 
   defp display_list(todos) do
     "----- Todo List -----" |> IO.puts
-    todos |> Enum.each(
+    todos.todos |> Enum.each(
       fn (todo) ->
         todo_struct = elem(todo, 1)
         "#{todo_struct.id} -> " <>
@@ -67,18 +67,27 @@ defmodule ElixirTodo do
     display_menu(todos)
   end
 
+  defp write_csv(todos) do
+    file = File.open!(@path, [:write, :utf8])
+    todos |> CSV.encode |> Enum.each(&IO.write(file, &1))
+  end
+
   defp add_task(todos) do
     id = todos.last_id + 1
     task = "What if your task ? " |> IO.gets |> String.trim
     date = "When is your task due ? " |> IO.gets |> String.trim
-    new_todos = Map.put_new(todos.todos, id, %Todo{date: date, id: id, status: "false", task: task})
+    new_todos = %ElixirTodo{
+      last_id: id,
+      todos: Map.put_new(todos.todos, id, %Todo{date: date, id: id, status: "false", task: task})
+    }
+    write_csv(new_todos.todos)
     display_list(new_todos)
   end
 
   defp dispatch(todos) do
     user_choise = "What do you want to do ? " |> IO.gets |> String.trim
     cond do
-      user_choise == "1" -> display_list(todos.todos)
+      user_choise == "1" -> display_list(todos)
       user_choise == "2" -> add_task(todos)
       # user_choise == "3" -> update_task(todos)
       # user_choise == "4" -> delete_task(todos)

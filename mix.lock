@@ -1,1 +1,4 @@
-%{"remix": {:hex, :remix, "0.0.2", "f06115659d8ede8d725fae1708920ef73353a1b39efe6a232d2a38b1f2902109", [], [], "hexpm"}}
+%{"csv": {:hex, :csv, "2.0.0", "c66fea89ba7862b94901baf0871285e9b73cad89c5fdb57a6386d2adcf29593e", [], [{:parallel_stream, "~> 1.0.4", [hex: :parallel_stream, repo: "hexpm", optional: false]}], "hexpm"},
+  "nimble_csv": {:hex, :nimble_csv, "0.4.0", "e2a21d93071cb3b3278411b5b49fe6b55a0e4b3e90485d1187e0c9c75c74f977", [], [], "hexpm"},
+  "parallel_stream": {:hex, :parallel_stream, "1.0.5", "4c78d3e675f9eff885cbe252c89a8fc1d2fb803c0d03a914281e587834e09431", [], [], "hexpm"},
+  "remix": {:hex, :remix, "0.0.2", "f06115659d8ede8d725fae1708920ef73353a1b39efe6a232d2a38b1f2902109", [], [], "hexpm"}}

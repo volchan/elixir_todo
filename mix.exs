@@ -25,7 +25,8 @@ defmodule ElixirTodo.Mixfile do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:remix, "~> 0.0.1", only: :dev}
+      {:remix, "~> 0.0.1", only: :dev},
+      {:csv, "~> 2.0.0"}
     ]
   end
 end
